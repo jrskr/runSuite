@@ -1,0 +1,38 @@
+#!/bin/bash
+
+if [ $# != 2 ] ; then
+      echo "Usage: $0 input_file program" 1>&2
+        exit 1
+fi
+
+
+while read lines
+do
+
+	if [ ! -r "${lines}.in" ] || [ ! -f "${lines}.in" ]
+        then
+                echo "Missing input file(s)" 1>&2
+                  exit 1
+        fi
+
+
+        if [ ! -r "${lines}.out" ] || [ ! -f "${lines}.out" ]
+        then
+                echo "Missing output file(s)" 1>&2
+                  exit 1
+        fi
+
+
+        givenInput=`ls | cat $lines.in`
+
+        correctOutput=`./$2 < ${lines}.in`
+
+        givenOutput=`ls | cat $lines.out`
+
+        if [[ ${correctOutput} != ${givenOutput} ]];
+        then
+
+                echo -e "Test failed: ${lines}\nInput:\n${givenInput}\nExpected:\n${givenOutput}\nActual:\n${correctOutput}\n"
+        fi
+
+done < $1
